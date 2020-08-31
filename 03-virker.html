@@ -116,6 +116,16 @@
             })
         }
 
-        visPersoner();
+        function addEventListenersToButtons() {
+            document.querySelectorAll(".filter").forEach((btn) => {
+                btn.addEventListener("click", filterBTNs);
+            });
+        }
+
+        function filterBTNs() {
+            filter = this.dataset.køn;
+            visPersoner();
+
+        }
     </script>
 </body></html>
