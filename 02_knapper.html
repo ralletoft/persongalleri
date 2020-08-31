@@ -64,7 +64,7 @@
         <button class="filter" data-køn="andet">Andet</button>
     </header>
 
-    <section>
+    <section id="list">
 
     </section>
 
@@ -101,9 +101,10 @@
         function visPersoner() {
             const templatePointer = document.querySelector("template");
             const listPointer = document.querySelector("#list");
+            console.log(personer);
+
             personer.feed.entry.forEach(person => {
                 if (filter == person.gsx$køn.$t.toLowerCase()) {
-                    console.log(person);
                     const minKlon = templatePointer.cloneNode(true).content;
                     minKlon.querySelector("h2").textContent = person.gsx$navn.$t;
                     minKlon.querySelector("img").src = person.gsx$billede.$t;
@@ -112,5 +113,7 @@
 
             })
         }
+
+        visPersoner();
     </script>
 </body></html>
