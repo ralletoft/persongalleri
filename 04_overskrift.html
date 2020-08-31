@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>JS Objekter</title>
+    <style>
+        * {
+            margin: 0px;
+            padding: 0px;
+        }
+
+
+
+
+        section {
+            width: 90vw;
+            max-width: 1100px;
+            margin: 0 auto;
+            display: grid;
+            grid-gap: 30px;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        }
+
+        article {
+            border: 1px solid #333;
+        }
+
+        img {
+            width: 100%;
+        }
+
+
+        p {
+            margin: 10px 0 0 10px;
+            font-family: sans-serif;
+        }
+
+        h2 {
+            margin: 10px 0 0 10px;
+            font-family: sans-serif;
+        }
+
+        button {
+            margin: 10px;
+            flex-basis: auto;
+            position: relative;
+            border: 3px solid darkgray;
+            font-size: 1.5em;
+        }
+
+        header {
+            display: flex;
+            justify-content: center;
+        }
+
+        h1 {
+            display: flex;
+            justify-content: center;
+            font-size: 4em;
+            font-family: sans-serif;
+            color: darkgray;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h1>Alle</h1>
+
+    <header>
+
+        <button class="filter valgt" data-køn="alle">Alle</button>
+        <button class="filter" data-køn="m">Mænd</button>
+        <button class="filter" data-køn="k">Kvinder</button>
+        <button class="filter" data-køn="andet">Andet</button>
+    </header>
+
+    <section id="list">
+
+    </section>
+
+    <template>
+        <article>
+            <h2></h2>
+            <h2 class="navn"></h2>
+            <img src="" alt="">
+            <p class="køn">Køn: </p>
+            <p class="alder">Alder: </p>
+            <p class="religion">Religion: </p>
+            <p class="hobby">Hobby: </p>
+            <p class="kæledyr">Kæledyr: </p>
+            <p class="job">Job: </p>
+            <p class="by">By: </p>
+            <p class="land">Land: </p>
+
+
+        </article>
+    </template>
+    <script>
+        let personer;
+        let filter = "k";
+        document.addEventListener("DOMContentLoaded", loadJSON)
+
+        async function loadJSON() {
+            const JSONData = await
+            fetch("https://spreadsheets.google.com/feeds/list/1mtHhpoEkYqVqr1TSnKQ1_sQZWI7FRVjcw3H1oatDOVQ/od6/public/values?alt=json");
+
+            personer = await JSONData.json();
+            addEventListenersToButtons();
+            visPersoner();
+        }
+
+        function visPersoner() {
+            const templatePointer = document.querySelector("template");
+            const listPointer = document.querySelector("#list");
+            listPointer.innerHTML = "";
+            console.log(personer);
+
+            personer.feed.entry.forEach(person => {
+                if (filter == "alle" || filter == person.gsx$køn.$t) {
+                    const minKlon = templatePointer.cloneNode(true).content;
+                    minKlon.querySelector("h2").textContent = person.gsx$navn.$t;
+                    minKlon.querySelector("img").src = person.gsx$billede.$t;
+                    listPointer.appendChild(minKlon);
+                }
+
+            })
+        }
+
+        function addEventListenersToButtons() {
+            document.querySelectorAll(".filter").forEach((btn) => {
+                btn.addEventListener("click", filterBTNs);
+            });
+        }
+
+        function filterBTNs() {
+            filter = this.dataset.køn;
+            document.querySelector("h1").textContent = this.textContent;
+            visPersoner();
+
+        }
+    </script>
+</body></html>
