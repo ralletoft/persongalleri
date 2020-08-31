@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>JS Objekter</title>
+    <style>
+        * {
+            margin: 0px;
+            padding: 0px;
+        }
+
+
+
+
+        section {
+            width: 90vw;
+            max-width: 1100px;
+            margin: 0 auto;
+            display: grid;
+            grid-gap: 30px;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        }
+
+        article {
+            border: 1px solid #333;
+        }
+
+        img {
+            width: 100%;
+        }
+
+
+        p {
+            margin: 10px 0 0 10px;
+            font-family: sans-serif;
+        }
+
+        h2 {
+            margin: 10px 0 0 10px;
+            font-family: sans-serif;
+        }
+
+        button {
+            margin: 10px;
+            flex-basis: auto;
+            position: relative;
+            border: 3px solid black;
+        }
+
+        header {
+            display: flex;
+            justify-content: center;
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <button class="filter valgt" data-køn="alle">Alle</button>
+        <button class="filter" data-køn="m">Mænd</button>
+        <button class="filter" data-køn="k">Kvinder</button>
+        <button class="filter" data-køn="andet">Andet</button>
+    </header>
+
+    <section>
+
+    </section>
+
+    <template>
+        <article>
+            <h2></h2>
+            <h2 class="navn"></h2>
+            <img src="" alt="">
+            <p class="køn">Køn: </p>
+            <p class="alder">Alder: </p>
+            <p class="religion">Religion: </p>
+            <p class="hobby">Hobby: </p>
+            <p class="kæledyr">Kæledyr: </p>
+            <p class="job">Job: </p>
+            <p class="by">By: </p>
+            <p class="land">Land: </p>
+
+
+        </article>
+    </template>
+    <script>
+        let personer;
+        let filter = "k";
+        document.addEventListener("DOMContentLoaded", loadJSON)
+
+        async function loadJSON() {
+            const JSONData = await
+            fetch("https://spreadsheets.google.com/feeds/list/1mtHhpoEkYqVqr1TSnKQ1_sQZWI7FRVjcw3H1oatDOVQ/od6/public/values?alt=json");
+
+            personer = await JSONData.json();
+            visPersoner();
+        }
+
+        function visPersoner() {
+            const templatePointer = document.querySelector("template");
+            const listPointer = document.querySelector("#list");
+            personer.feed.entry.forEach(person => {
+                if (filter == person.gsx$køn.$t.toLowerCase()) {
+                    console.log(person);
+                    const minKlon = templatePointer.cloneNode(true).content;
+                    minKlon.querySelector("h2").textContent = person.gsx$navn.$t;
+                    minKlon.querySelector("img").src = person.gsx$billede.$t;
+                    listPointer.appendChild(minKlon);
+                }
+
+            })
+        }
+    </script>
+</body></html>
